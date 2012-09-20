@@ -1,10 +1,38 @@
+import Control.Monad
 import Control.Monad.ST
 import Data.Array.ST
 import qualified Data.ByteString.Lazy as BS
 import Data.Char
 import Data.Word
-import System.Environment
+import System.Console.ParseArgs
 import System.IO
+
+data ArgInd = ArgEncrypt | ArgDecrypt | ArgKey
+     deriving (Ord, Eq, Show)
+
+argd :: [ Arg ArgInd ]
+argd = [
+  Arg {
+     argIndex = ArgEncrypt,
+     argName = Just "encrypt",
+     argAbbr = Just 'e',
+     argData = Nothing,
+     argDesc = "Use decryption mode."
+  },
+  Arg {
+     argIndex = ArgDecrypt,
+     argName = Just "decrypt",
+     argAbbr = Just 'd',
+     argData = Nothing,
+     argDesc = "Use encryption mode."
+  },
+  Arg {
+     argIndex = ArgKey,
+     argName = Nothing,
+     argAbbr = Nothing,
+     argData = argDataRequired "key" ArgtypeString,
+     argDesc = "Encryption or decryption key."
+  } ]
 
 type CState s = STUArray s Word8 Word8
 
@@ -37,7 +65,12 @@ getIV =
 
 main :: IO ()
 main = do
-  (k : _) <- getArgs
+  argv <- parseArgsIO ArgsComplete argd
+  let k = getRequiredArg argv ArgKey
+  let e = gotArg argv ArgEncrypt
+  let d = gotArg argv ArgDecrypt
+  unless ((e && not d) || (d && not e)) $
+    usageError argv "Exactly one of -e or -d is required."
   iv <- getIV
   let v = runST $ 
            do 
