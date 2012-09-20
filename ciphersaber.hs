@@ -1,9 +1,8 @@
 import Control.Monad.ST
 import Data.Array.ST
---import qualified Data.ByteString.Char8 as BS
+import qualified Data.ByteString.Lazy as BS
 import Data.Char
 import Data.Word
-import Foreign
 import System.Environment
 import System.IO
 
@@ -32,11 +31,9 @@ getIV :: IO [Word8]
 getIV = 
   withBinaryFile "/dev/urandom" ReadMode $ \h ->
   do
-    fp <- mallocForeignPtrBytes 10
-    withForeignPtr fp $ \buf ->
-      do
-        10 <- hGetBuf h buf 10
-        mapM (peekElemOff buf) [0..9]
+    hSetBuffering h NoBuffering
+    ivs <- BS.hGet h 10
+    return $ BS.unpack ivs
 
 main :: IO ()
 main = do
