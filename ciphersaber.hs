@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 import Control.Monad
 import Data.Array.IO
 import qualified Data.Bits as B
