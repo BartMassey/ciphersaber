@@ -1,3 +1,8 @@
+# Copyright © 2012 Bart Massey
+# [This program is licensed under the "MIT License"]
+# Please see the file COPYING in the source
+# distribution of this software for license terms.
+
 CC = gcc
 CFLAGS = -Wall -O2
 HC = ghc
