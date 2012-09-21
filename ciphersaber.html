@@ -1,0 +1,408 @@
+<!--This file created 2/1/99 6:38 AM by Claris Home Page version 2.0-->
+<HTML>
+<HEAD>
+   <TITLE>CipherSaber Home Page</TITLE>
+   <META NAME=GENERATOR CONTENT="Claris Home Page 2.0">
+   <X-SAS-WINDOW TOP=115 BOTTOM=600 LEFT=15 RIGHT=545>
+   <X-SAS-REMOTESAVE SERVER="iecc.com" USER="arnold"
+   DIR="~arnold/ciphersaber-web/" FILE="index.html">
+<META  name="description" content="Fight the crypto ban by 
+	learning how to write your own strong encryption program."><META  name="keywords" content="ciphersaber, encryption, crypto,
+	cryptography, basic, codes, passphrase, cyphersaber, totalitarian, 
+	ban, legislation, cs1, cipherknight, PGP, RC4, FBI, Freeh, Star Wars">
+</HEAD>
+<BODY BGCOLOR="#FCFCD6">
+
+<H1><CENTER>The CipherSaber Home Page</CENTER></H1>
+
+<P>In George Lucas' Star Wars trilogy, Jedi Knights were expected to
+make their own light sabers. The message was clear: a warrior
+confronted by a powerful empire bent on totalitarian control must be
+self-reliant. As we face a real threat of a ban on the distribution
+of strong cryptography, in the United States and possibly world-wide,
+we should emulate the Jedi masters by learning how to build strong
+cryptography programs all by ourselves. If this can be done, strong
+cryptography will become impossible to suppress.</P>
+
+<P><CENTER><IMG SRC="lightsword.gif" ALT="Green Saber" WIDTH=500
+HEIGHT=15 X-SAS-UseImageWidth X-SAS-UseImageHeight ALIGN=bottom>
+</CENTER></P>
+
+<P>While cryptographers like to wallow in the complexity of their
+art, the basic elements of a strong cryptographic system are quite
+simple and well known in the programming community. By choosing a
+simple but strong cipher that is already widely published and
+agreeing on how to use it, anyone with elementary programming skills
+can write their own encryption program without relying on any
+products that can be banned.</P>
+
+<P>CipherSaber-1 uses Ron Rivest's RC4 algorithm as published in the
+second edition of
+<A HREF="http://www.amazon.com/exec/obidos/ASIN/0471117099/agreinhol">Bruce
+Schneier's Applied Cryptography.</A> RC4 is widely respected and used
+in a number of products, including SSL, the tool Web browsers use to
+secure credit card forms. With a long enough key RC4 is considered
+strong by most experts. RC4 is also extraordinarily easy to explain
+and to reproduce. As Schneier says, "The algorithm is so simple that
+most programmers can quickly code it from memory." Implementations of
+RC4 are widely available on the Internet but it is actually easier to
+write your own version.</P>
+
+<P>The legal status of RC4 is the subject of some controversy. The
+<A HREF="http://www.rsa.com/">RSA Division of Security Dynamics</A>
+still considers RC4 confidential and proprietary. It is not patented
+and, to the extent that Schneier is correct (and no one doubts him),
+it is not confidential. However, anyone wishing to build a commercial
+product using CipherSaber might find it cost-effective, as well as
+polite, to obtain a license from RSA. Apologies to Prof. Rivest for
+suggesting individuals use his invention without his consent. If
+there were another strong algorithm so singularly suitable,
+CipherSaber would have used it.</P>
+
+<P>CipherSaber is a symmetric-key file encryption system. That means
+it uses the same secret key to encode and decode a computer file. To
+send a secret message, just attach the CipherSaber encoded binary
+file to an e-mail. Both sender and recipient must have the same
+secret key. </P>
+
+<P>Because CipherSaber uses a stream cipher, an initialization vector
+must be attached to the user's key to prevent the same RC4 key from
+being used twice. CipherSaber uses a ten byte long random string for
+this purpose. When your CipherSaber-1 program encrypts a file, it
+must put the ten byte initialization vector in front of the coded
+data. For decryption, your CipherSaber-1 program reads the
+initialization vector from the file and appendeds it to the user key
+before the RC4 key setup step.</P>
+
+<P>A CipherSaber-1 program can be implemented in 16 lines of QBasic
+(38 individual Basic statements). The source code is short enough to
+print on tee-shirts and coffee mugs. But there is no need to
+distribute source code at all. The CipherSaber concept can be passed
+on by word of mouth, if necessary.</P>
+
+<H2>Soapbox</H2>
+
+<P><IMG SRC="soapbox.gif" ALT="Orator" WIDTH=146 HEIGHT=303
+X-SAS-UseImageWidth X-SAS-UseImageHeight ALIGN=left>The U.S. Congress
+is considering <A HREF="http://jya.com/hr695-amend.htm">legislation
+that would ban the domestic distribution of cryptographic
+products</A> that do not provide for immediate government access to
+the plaintext of messages. This government access must be possible
+without the consent or even the knowledge of the message's sender or
+recipient. The stated intent is to protect us from criminals and
+terrorists. Also, an international agreement on limiting the spread
+of armaments, called the
+<A HREF="http://www.fitug.de/news/wa/index.html">Wassenaar
+Arrangement</A>, has just been changed to block export of mass-market
+software containing strong cryptography.</P>
+
+<P>The simplicity of CipherSaber should prove once and for all that
+the criminals and terrorists of this world will not be deprived of
+strong cryptography simply because the distribution of unapproved
+products is banned. They can get the necessary technology to make
+their own from existing books or the Internet whenever they feel they
+need it.</P>
+
+<P>Another goal of CipherSaber is to demonstrate that strong
+cryptography cannot be banned without severe restrictions on freedom
+of speech. Banning the sale of a complex computer program or even the
+multi-volume printed edition of PGP source code may seem acceptable
+to many people. Banning the simple instructions needed for
+CipherSaber will require the starkest abridgment of the First
+Amendment.</P>
+
+<P>Finally, CipherSaber is a useful pedagogical tool, helping to
+educate students by presenting them with a real-world programming
+problem that has both technical and ethical dimensions. We urge
+teachers of computer science and authors of books on programming to
+consider including CipherSaber as an exercise in their courses and
+texts.</P>
+
+<P>CipherSaber parallels the time honored doctrine of jury
+nullification, where jurors simply refuse to convict persons of
+violating laws that the jurors determine are unreasonable or unjust.
+Similarly technologists may take lawful steps as individuals to
+prevent their work from being used to build a totalitarian
+infrastructure. It is not that the present U.S. Government is evil --
+it may well be the most benign government in history. But once the
+technology for totalitarian control is in place, this or any
+government will inexorably use it more and more, as recent events in
+Washington have demonstrated. And that technology is coming together
+with alarming rapidity. George Orwell's novel 1984 is not science
+fiction, it is just one more high tech product plan that missed its
+original delivery date.</P>
+
+<H2>So what is CipherSaber?</H2>
+
+<P>CipherSaber-1 is and encryption method based on simple use of
+existing technology:</P>
+
+<P>1. The CipherSaber-1 encryption algorithm is RC4 as published in
+the beginning of Chapter 17 of
+<A HREF="http://www.amazon.com/exec/obidos/ASIN/0471117099/agreinhol">Applied
+Cryptography, Second Edition, by Bruce Schneier</A>, John Wiley &amp;
+Sons, New York, 1996. RC4 is on page 397 in the English edition, ISBN
+0-471-11709-9. Also see the
+<A HREF="http://ciphersaber.gurus.com/faq.html#getrc4">CipherSaber
+FAQ</A>.</P>
+
+<P>2. Each encrypted file consists of a ten byte initialization
+vector followed by the cipher text. A new, random ten byte
+initialization vector should be created each time encryption is
+performed.</P>
+
+<P>3. The cipher key, which is the array K(i) in
+<A HREF="http://www.counterpane.com/applied.html">Schneier's</A>
+notation, consists of the user key, in the form of an Ascii text
+string, followed by the ten byte initialization vector.</P>
+
+<P>The above is all a programmer needs to know in order to write a
+program that can encipher and decipher CipherSaber-1 files.</P>
+
+<H4>If you would like more information on CipherSaber-1 and
+CipherSaber-2, see the
+<A HREF="http://ciphersaber.gurus.com/faq.html">Frequently Asked
+Questions</A> and the technical
+<A HREF="http://ciphersaber.gurus.com/cryptanalysis.html">Cryptanalysis
+of CipherSaber</A>. A
+<A HREF="http://www.st.rim.or.jp/~hyuki/cs/">Japanese version</A> is
+also available.</H4>
+
+<H2>Explanation of CipherSaber-1 features</H2>
+
+<P>The user key is a text string, rather than a hex value, because
+humans are more likely to be able to memorize a text string with
+sufficient entropy. To leave room for the initialization vector, the
+length of the user key must be less than 246 bytes. To insure
+adequate mixing of the initialization vector and user key, <B>we
+recommend you select a user key of 54 bytes or less</B>. A user key
+with a minimum of 14 random letters, or 5 short words
+<A HREF="http://www.hayom.com/diceware.html">selected at random from
+a dictionary</A>, should be used for medium security (64 bit
+entropy). For high security, use 20 random letters or seven random
+words. (90 bit entropy).</P>
+
+<P>Any value that is unique for each message can be used for
+initialization vector, but use of random values makes encrypted files
+indistinguishable from random noise. Note that the initialization
+vector is not kept secret. The random number generation used to make
+the initialization vector does not have to be particularly strong.
+The "rand" functions in most programming environments will suffice
+for a moderate number of messages, provided the function is seeded in
+some non-deterministic way, such as using the system clock. See a
+<A HREF="http://ciphersaber.gurus.com/cryptanalysis.html">Cryptanalysis
+of CipherSaber</A> for more details.</P>
+
+<P>For file encryption, a user need only memorize one key or
+passphrase. For messaging, users need to exchange pairs of keys
+through some secure means, most likely in person. Maintaining a list
+of correspondent's keys or passphrases in a master file, preferably
+itself encrypted with a memorized master key, is less convenient than
+public key encryption. But it may be all that is left in a few years
+if PGP key servers are banned.</P>
+
+<P>It may even be possible to teach a manual version of the
+Diffie-Hellman key exchange, perhaps using large number calculators
+(easily built in Java 1.1). The Diffie-Hellman procedure need be
+carried out just once per pair of correspondents, since CipherSaber
+eliminates the need to exchange keys for every message.</P>
+
+<P>CipherSaber programs can be easily written in almost any
+programming language. The Basic language, which used to come with all
+DOS based computers, is suitable. It can still be found on the
+Microsoft Windows '95 CD-ROM in the OTHER\OLDMSDOS directory, and on
+the Microsoft Windows '98 CD-ROM in the TOOLS\OLDMSDOS directory.
+Just copy QBASIC.EXE and QBASIC.HLP to your hard drive's DOS
+directory and you can start programming. Macintosh users can download
+the free <A HREF="http://www.nicholson.com/rhn/basic/">Chipmunk
+Basic</A> interpreter from the Internet. Begin by writing a program
+that can copy binary files byte by byte and then test it thoroughly
+before you add the encryption algorithm.</P>
+
+<P>Users can, of course, add features of their own to CipherSaber
+programs. For example a secure diary system that stored files in
+CipherSaber would not be hard to write in Java or Visual Basic.
+However it is important to keep CipherSaber itself simple so everyone
+can write a program that will read and write CipherSaber files.</P>
+
+<P>Feel free to <A HREF="mailto:arnold@iecc.com">e-mail</A> your
+comments, suggestions and experiences with CipherSaber. Please do not
+send your CipherSaber programs. <B>No encryption software -- source
+code or object code -- will be posted on this site!</B></P>
+
+<H2>Forge your CipherSaber and become a CipherKnight!</H2>
+
+<P><IMG SRC="foundary.gif" ALT="Sword being forged" WIDTH=297
+HEIGHT=199 X-SAS-UseImageWidth X-SAS-UseImageHeight ALIGN=right></P>
+
+<P>To popularize CipherSaber, a <A HREF="#cknight">"gif" file
+encrypted using CipherSaber</A>, is available on this Web site. This
+file, when decoded, can be printed as a CipherKnight wall
+certificate. The certificate may be displayed by persons who met
+certain criteria, including writing the program that decrypted the
+certificates. Here are the honor-system-enforced rules:</P>
+
+<H3>CipherKnight requirements</H3>
+
+<P>1. Write you own CipherSaber program.</P>
+
+<P>2. Write a letter to your
+<A HREF="http://www.zeitgeist.com/crypto/">political
+representative</A> expressing your opinion (whatever it may be) of
+the proposed ban on the distribution of strong cryptography.</P>
+
+<P>3. Download and install <A HREF="http://www.pgp.com">PGP</A>,
+generate a key pair and post your key to a public key server.</P>
+
+<P>4. Use a CipherSaber to send an secret message to another person.
+</P>
+
+<P>5. Decrypt
+<A HREF="http://ciphersaber.gurus.com/cknight.cs1">cknight.cs1</A>
+and print the CipherSaber wall certificate using the CipherSaber
+program you wrote yourself. The key is: "ThomasJefferson"</P>
+
+<P>Any of the eligibility requirements above is waved if it illegal
+in the applicant's local jurisdiction or if the applicant reasonably
+believes carrying it out would place him or her in danger.</P>
+
+<H2>Test Files</H2>
+
+<P>The following files are provided to help you check your work.
+<B>Caution: </B>Watch out for alterations in test file content due to
+text mode translation. Use <B>ftp</B> in binary mode, if possible, to
+download the files.</P>
+
+<H3><A HREF="http://ciphersaber.gurus.com/cstest1.cs1">cstest1.cs1</A>
+</H3>
+
+<P>This is a short text file encrypted with "asdfg" as the user key.
+Here are the contents of cstest1.cs1 in hex, in case you cannot
+download the file for some reason:</P>
+
+<PRE>6f 6d 0b ab f3 aa 67 19 03 15 30 ed b6 77 ca 74 e0 08 9d d0 
+e7 b8 85 43 56 bb 14 48 e3 7c db ef e7 f3 a8 4f 4f 5f b3 fd </PRE>
+
+<H3><A HREF="http://ciphersaber.gurus.com/cstest2.cs1">cstest2.cs1</A>
+</H3>
+
+<P>This text file was CipherSaber-1 encrypted with the key
+"SecretMessageforCongress" Remember that CipherSaber keys are case
+sensitive.</P>
+
+<H3><A NAME="cknight"></A><A HREF="http://ciphersaber.gurus.com/cknight.cs1">cknight.cs1</A>
+</H3>
+
+<P>This file is encrypted with the key "ThomasJefferson" It contains
+your CipherKnight wall certificate as a .gif file.</P>
+
+<H2>Spread the Word</H2>
+
+<BLOCKQUOTE><P><B>"It is the common fate of the indolent to see their
+rights become prey to the active. The condition upon which God hath
+given liberty to man is eternal vigilance."</B><BR>
+
+John Philpot Curran, 1790</P></BLOCKQUOTE>
+
+<P>Even if the proposed ban on strong cryptography does not become
+law, it is important that the CipherSaber concept be distributed as
+widely as possible. Please help in any legal way you can.</P>
+
+<P>Here are some people who have acted on this request: </P>
+
+<UL>
+   <LI>Marek Jedlinski's
+   <A HREF="http://www.lodz.pdi.net/~eristic/free/ciphersaber.html">CipherSaber
+   for the Masses</A> page has lots of helpful information on
+   building your own CipherSaber. 
+   
+   <LI><A NAME="Japanese"></A>Hiroshi Yuki has written a
+   <A HREF="http://www.st.rim.or.jp/~hyuki/cs/">CipherSaber page in
+   Japanese</A>. 
+</UL>
+
+<P>
+<HR>
+</P>
+
+<H2><IMG SRC="mylock.gif" WIDTH=103 HEIGHT=53 X-SAS-UseImageWidth
+X-SAS-UseImageHeight ALIGN=right></H2>
+
+<P><A HREF="http://www.hayom.com/reinhold.html">Arnold G.
+Reinhold</A><BR>
+
+Co-author
+<I><A HREF="http://www.amazon.com/exec/obidos/ASIN/0764501313/agreinhol">E-mail
+for Dummies</I>,</A>
+<I><A HREF="http://www.amazon.com/exec/obidos/ASIN/0764503553/agreinhol">Internet
+for Dummies Quick Reference</A><BR>
+
+</I>Cambridge, Massachusetts<BR>
+
+<A HREF="mailto:arnold@iecc.com">arnold@iecc.com</A></P>
+
+<H3>
+<HR>
+Legal Notices</H3>
+
+<P>CipherSaber programs may be subject to
+<A HREF="http://www.epic.org/crypto/export_controls/">export
+controls</A> in the United States, and many other countries and may
+be illegal altogether in some countries. Persons within the United
+States should not give copies of CipherSaber programs to foreign
+nationals, except for Canadian citizens, without a license. Persons
+traveling to other countries should familiarize themselves with local
+regulations. Consult a lawyer if you need legal advice.</P>
+
+<P>Star Wars is a registered trademark of
+<A HREF="http://www.starwars.com/">Lucasfilm Ltd</A>. RC4 is a
+trademark of the <A HREF="http://www.rsa.com/">RSA Division of
+Security Dynamics</A>.</P>
+
+<P>While CipherSaber-1 merely uses a published cipher, to the extent
+that anyone might consider that there are patentable improvements to
+the art embodied in CipherSaber-1 or CipherSaber-2, they are hereby
+placed in the public domain.</P>
+
+<P>The test samples and the encrypted version of the CipherKnight
+certificate may be freely copied and distributed intact by any means.
+</P>
+
+<P>Deciphered versions of the CipherKnight certificate are Copyright
+1997 by Arnold G. Reinhold but may be be copied and printed for
+individual, non-commercial use by any individual meeting the
+eligibility criteria described above.</P>
+
+<P>CipherSaber, CS1, CS2, and CipherKnight are trademarks of Arnold
+G. Reinhold. A free, nonexclusive license is hereby granted to use
+the marks CipherSaber, CS1 and CS2 on any product that is
+interoperable with CipherSaber as demonstrated by the ability to
+decrypt the test samples supplied and to produce files readable by
+other implementations of CipherSaber. The marks may also be used in
+supporting material that promotes CipherSaber.</P>
+
+<P>Books that are hyperlinked are available on-line in association
+with Amazon.com.</P>
+
+<P>This document is Copyright &copy; 1997-1999 by Arnold G. Reinhold.
+Permission is hereby give for unabridged copies to be distributed
+freely.</P>
+
+<H6><CENTER>
+<HR>
+Last updated February 1, 1999<TABLE BORDER=3>
+   <TR>
+      <TD WIDTH=298>
+         <PRE><CENTER>Ascii key+  ||  08d0a5d961603380e2949d682c
+10 Byte IV  ||  bfe8da5c1dec3aba9725d4f689
+Ron's No.4  ||  40761763d4d38935e8bd8a44bf
+All u need ==== 4656a7bd7f9ae5d082a30cdfa7
+CipherSaber ||  f21a918d29c5917956d0468eaf</CENTER></PRE>
+      </TD></TR>
+</TABLE>
+<HR>
+</CENTER></H6>
+
+<P>&nbsp;</P>
+</BODY>
+</HTML>
