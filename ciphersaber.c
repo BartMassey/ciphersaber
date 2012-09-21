@@ -42,6 +42,8 @@ int main(int argc, char **argv) {
   unsigned char *ivp;
   int tmp, ch;
   int i, j, n;
+
+#ifdef READ_KEY
   char *s;
 
   /* mode */
@@ -74,6 +76,19 @@ int main(int argc, char **argv) {
       return 1;
     }
   }
+#else
+  /* mode */
+  if (argc == 3 && !strcmp(argv[1], "-e")) {
+    encrypt = 1;
+  } else if (argc == 3 && !strcmp(argv[1], "-d")) {
+    encrypt = 0;
+  } else {
+    fprintf(stderr, "usage: ciphersaber [-e|-d] <key>\n");
+    return 1;
+  }
+  nkey = strlen(argv[2]);
+  strncpy((char *)key, argv[2], nkey);
+#endif
 
   /* iv handling */
   ivp = &key[nkey];
