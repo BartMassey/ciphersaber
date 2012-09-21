@@ -76,11 +76,11 @@ makeIV =
     BS.hPut stdout ivs
     return $ BS.unpack ivs
 
-accumMapM :: Monad m => (a -> b -> m (a, b)) -> a -> [b] -> m [b]
+accumMapM :: (Functor m, Monad m) => (a -> b -> m (a, b)) -> a -> [b] -> m [b]
 accumMapM _ _ [] = return []
 accumMapM a acc (b : bs) = do
   (acc', b') <- a acc b
-  accumMapM a acc' bs >>= return . (b' :)
+  fmap (b' :) $ accumMapM a acc' bs
 
 type Accum = ((Word8, Word8), CState)
 
