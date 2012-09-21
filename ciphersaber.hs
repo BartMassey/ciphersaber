@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 -- Copyright © 2012 Bart Massey
 -- [This program is licensed under the "MIT License"]
 -- Please see the file COPYING in the source
@@ -84,7 +85,7 @@ accumMapM a acc (b : bs) = do
 type Accum = ((Word8, Word8), CState)
 
 stepRC4 :: Accum -> Word8 -> IO (Accum, Word8)
-stepRC4 ((i, j), state) b = do
+stepRC4 ((!i, !j), !state) !b = do
   let i' = i + 1
   si' <- readArray state i'
   let j' = j + si'
