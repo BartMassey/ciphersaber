@@ -1,6 +1,7 @@
+{-# LANGUAGE BangPatterns #-}
 import Control.Monad
-import Control.Monad.ST
-import Data.Array.ST
+import Data.Array.IO
+import qualified Data.Bits as B
 import qualified Data.ByteString.Lazy as BS
 import Data.Char
 import Data.Word
@@ -34,18 +35,18 @@ argd = [
      argDesc = "Encryption or decryption key."
   } ]
 
-type CState s = STUArray s Word8 Word8
+type CState = IOUArray Word8 Word8
 
 fi :: (Integral a, Num b) => a -> b
 fi = fromIntegral
 
-initKeystream :: String -> [Word8] -> ST s (CState s)
+initKeystream :: String -> [Word8] -> IO CState
 initKeystream key iv = do
   let kl = cycle $ map (fi . ord) key ++ iv
   state <- newListArray (0, 255) [0..255]
   mixArray kl state (0, 0)
   where
-    mixArray :: [Word8] -> CState s -> (Int, Int) -> ST s (CState s)
+    mixArray :: [Word8] -> CState -> (Int, Int) -> IO CState
     mixArray k a (i, j) | i < 256 = do
       si <- readArray a (fi i)
       let j' = j + fi si + fi (k !! i)
@@ -55,26 +56,52 @@ initKeystream key iv = do
       mixArray k a (i + 1, j')
     mixArray _ a _ = return a
 
-getIV :: IO [Word8]
-getIV = 
+readIV :: IO [Word8]
+readIV = do
+  ivs <- BS.hGet stdin 10
+  return $ BS.unpack ivs
+
+makeIV :: IO [Word8]
+makeIV = 
   withBinaryFile "/dev/urandom" ReadMode $ \h ->
   do
     hSetBuffering h NoBuffering
     ivs <- BS.hGet h 10
+    BS.hPut stdout ivs
     return $ BS.unpack ivs
+
+applyKeystream :: CState -> [Word8] -> IO [Word8]
+applyKeystream state intext =
+  stepRC4 (0, 0) intext
+  where
+    stepRC4 (i, j) (b : bs) = do
+      let i' = (i + 1)
+      si' <- readArray state (fi i')
+      let j' = j + si'
+      sj' <- readArray state (fi j')
+      writeArray state i' sj'
+      writeArray state j' si'
+      let k = si' + sj'
+      ks <- stepRC4 (i', j') bs
+      return $ (b `B.xor` k) : ks
+    stepRC4 _ [] = return []
+
+applyStreamCipher :: CState -> IO ()
+applyStreamCipher state = do
+  intext <- BS.getContents
+  outtext <- applyKeystream state $ BS.unpack intext
+  BS.putStr $ BS.pack outtext
 
 main :: IO ()
 main = do
+  hSetBinaryMode stdin True
+  hSetBinaryMode stdout True
   argv <- parseArgsIO ArgsComplete argd
   let k = getRequiredArg argv ArgKey
   let e = gotArg argv ArgEncrypt
   let d = gotArg argv ArgDecrypt
   unless ((e && not d) || (d && not e)) $
     usageError argv "Exactly one of -e or -d is required."
-  iv <- getIV
-  let v = runST $ 
-           do 
-             s <- initKeystream k iv
-             sn <- readArray s 255
-             return sn
-  putStrLn $ show v
+  iv <- if e then makeIV else readIV
+  s <- initKeystream k iv
+  applyStreamCipher s
