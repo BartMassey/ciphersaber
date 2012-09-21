@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     return 1;
   }
   (void) strcpy((char *) key, s);
-  nkey = strlen(key);
+  nkey = strlen((char *) key);
   if (encrypt) {
     s = getpass("Again: ");
     if (!s) {
