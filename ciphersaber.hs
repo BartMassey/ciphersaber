@@ -46,20 +46,21 @@ initKeystream key iv = do
   state <- newListArray (0, 255) [0..255]
   mixArray kl state (0, 0)
   where
-    mixArray :: [Word8] -> CState -> (Int, Int) -> IO CState
+    mixArray :: [Word8] -> CState -> (Int, Word8) -> IO CState
     mixArray k a (i, j) | i < 256 = do
       si <- readArray a (fi i)
       let j' = j + fi si + fi (k !! i)
-      sj' <- readArray a (fi j')
+      sj' <- readArray a j'
       writeArray a (fi i) sj'
-      writeArray a (fi j) si
+      writeArray a j' si
       mixArray k a (i + 1, j')
     mixArray _ a _ = return a
 
 readIV :: IO [Word8]
 readIV = do
   ivs <- BS.hGet stdin 10
-  return $ BS.unpack ivs
+  let ivl = BS.unpack ivs
+  return ivl
 
 makeIV :: IO [Word8]
 makeIV = 
@@ -70,21 +71,28 @@ makeIV =
     BS.hPut stdout ivs
     return $ BS.unpack ivs
 
+accumMapM :: Monad m => (a -> b -> m (a, b)) -> a -> [b] -> m [b]
+accumMapM _ _ [] = return []
+accumMapM a acc (b : bs) = do
+  (acc', b') <- a acc b
+  accumMapM a acc' bs >>= return . (b' :)
+
+type Accum = ((Word8, Word8), CState)
+
+stepRC4 :: Accum -> Word8 -> IO (Accum, Word8)
+stepRC4 ((i, j), state) b = do
+  let i' = i + 1
+  si' <- readArray state i'
+  let j' = j + si'
+  sj' <- readArray state j'
+  writeArray state i' sj'
+  writeArray state j' si'
+  k <- readArray state (si' + sj')
+  return (((i', j'), state), k `B.xor` b)
+
 applyKeystream :: CState -> [Word8] -> IO [Word8]
-applyKeystream state intext =
-  stepRC4 (0, 0) intext
-  where
-    stepRC4 (i, j) (b : bs) = do
-      let i' = (i + 1)
-      si' <- readArray state (fi i')
-      let j' = j + si'
-      sj' <- readArray state (fi j')
-      writeArray state i' sj'
-      writeArray state j' si'
-      let k = si' + sj'
-      ks <- stepRC4 (i', j') bs
-      return $ (b `B.xor` k) : ks
-    stepRC4 _ [] = return []
+applyKeystream state intext = 
+  accumMapM stepRC4 ((0, 0), state) intext
 
 applyStreamCipher :: CState -> IO ()
 applyStreamCipher state = do
