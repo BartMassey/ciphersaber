@@ -40,8 +40,8 @@ static void mkiv(void) {
 int main(int argc, char **argv) {
   int encrypt = 0;
   unsigned char *ivp;
-  int tmp, ch;
-  int i, j, n;
+  int tmp, ch, k;
+  unsigned char i, j, n;
 
 #ifdef READ_KEY
   char *s;
@@ -103,11 +103,12 @@ int main(int argc, char **argv) {
   nkey += 10;
 
   /* mixing */
-  for (i = 0; i < 256; i++)
-    state[i] = i;
+  for (k = 0; k < 256; k++)
+    state[k] = k;
   j = 0;
-  for (i = 0; i < 256; i++) {
-    j = (j + state[i] + key[i % nkey]) % 256;
+  for (k = 0; k < 256; k++) {
+    i = k;
+    j += state[i] + key[i % nkey];
     tmp = state[i];
     state[i] = state[j];
     state[j] = tmp;
@@ -116,12 +117,12 @@ int main(int argc, char **argv) {
   /* ciphering */
   i = j = 0;
   while ((ch = getchar()) != EOF) {
-    i = (i + 1) % 256;
-    j = (j + state[i]) % 256;
+    i++;
+    j += state[i];
     tmp = state[i];
     state[i] = state[j];
     state[j] = tmp;
-    n = (state[i] + state[j]) % 256;
+    n = state[i] + state[j];
     putchar(state[n] ^ ch);
   }
 
