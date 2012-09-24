@@ -76,39 +76,48 @@ makeIV =
     BS.hPut stdout ivs
     return $ BS.unpack ivs
 
+{-
 accumMapM :: (Functor m, Monad m) => (a -> b -> m (a, b)) -> a -> [b] -> m [b]
 accumMapM _ _ [] = return []
 accumMapM a acc (b : bs) = do
   (acc', b') <- a acc b
   fmap (b' :) $ accumMapM a acc' bs
+-}
+
+accumMapM_ :: Monad m => (a -> b -> m a) -> a -> [b] -> m ()
+accumMapM_ _ _ [] = return ()
+accumMapM_ a acc (b : bs) = do
+  acc' <- a acc b
+  accumMapM_ a acc' bs
 
 type Accum = ((Word8, Word8), CState)
 
-stepRC4 :: Accum -> Word8 -> IO (Accum, Word8)
+stepRC4 :: Accum -> Char -> IO Accum
 stepRC4 ((!i, !j), !state) !b = do
-  let i' = i + 1
-  si' <- readArray state i'
-  let j' = j + si'
-  sj' <- readArray state j'
-  writeArray state i' sj'
+  let !i' = i + 1
+  !si' <- readArray state i'
+  let !j' = j + si'
   writeArray state j' si'
-  k <- readArray state (si' + sj')
-  return (((i', j'), state), k `B.xor` b)
+  !sj' <- readArray state j'
+  writeArray state i' sj'
+  !k <- readArray state (si' + sj')
+  putChar $ chr $ fi k `B.xor` (fi (ord b))
+  return ((i', j'), state)
 
-applyKeystream :: CState -> [Word8] -> IO [Word8]
+applyKeystream :: CState -> String -> IO ()
 applyKeystream state intext = 
-  accumMapM stepRC4 ((0, 0), state) intext
+  accumMapM_ stepRC4 ((0, 0), state) intext
 
 applyStreamCipher :: CState -> IO ()
-applyStreamCipher state = do
-  intext <- BS.getContents
-  outtext <- applyKeystream state $ BS.unpack intext
-  BS.putStr $ BS.pack outtext
+applyStreamCipher state =
+  getContents >>= applyKeystream state
 
 main :: IO ()
 main = do
   hSetBinaryMode stdin True
   hSetBinaryMode stdout True
+  hSetBuffering stdin $ BlockBuffering $ Just $ 64 * 1024
+  hSetBuffering stdout $ BlockBuffering $ Just $ 64 * 1024
   argv <- parseArgsIO ArgsComplete argd
   let k = getRequiredArg argv ArgKey
   let e = gotArg argv ArgEncrypt
