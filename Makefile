@@ -6,7 +6,8 @@
 CC = gcc
 CFLAGS = -Wall -O2
 HC = ghc
-HFLAGS = -Wall -O2 --make
+#HFLAGS = -Wall -O2 --make
+HFLAGS = -Wall -O2 -prof -fprof-auto --make
 
 all: ciphersaber-c ciphersaber-hs
 
