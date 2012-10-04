@@ -26,18 +26,18 @@ static int nkey;
 static void mkiv(void) {
   int fd, n;
 
-  fd = open("/dev/random", O_RDONLY, 0);
+  fd = open("/dev/urandom", O_RDONLY, 0);
   if (fd == -1) {
-    perror("open: /dev/random");
+    perror("open: /dev/urandom");
     exit(1);
   }
   n = read(fd, (char *) &key[nkey], 10);
   if (n == -1) {
-    perror("read /dev/random");
+    perror("read /dev/urandom");
     exit(1);
   }
   if (n < 10) {
-    fprintf(stderr, "short read on /dev/random\n");
+    fprintf(stderr, "short read on /dev/urandom\n");
     exit(1);
   }
   (void) close(fd);
