@@ -6,8 +6,8 @@
 CC = gcc
 CFLAGS = -Wall -O2
 HC = ghc
-#HFLAGS = -Wall -O2 --make
-HFLAGS = -Wall -O2 -prof -fprof-auto --make
+HFLAGS = -Wall -O2 --make
+#HFLAGS = -Wall -O2 -prof -fprof-auto --make
 
 all: ciphersaber-c ciphersaber-hs
 
@@ -26,3 +26,7 @@ test: all
 	  time ./ciphersaber-c -e hello </tmp/$$i.txt >/dev/null ; \
 	  time ./ciphersaber-hs -e hello </tmp/$$i.txt >/dev/null ; \
 	done
+
+clean:
+	-rm -f ciphersaber-c ciphersaber-hs ciphersaber-hs.prof \
+	ciphersaber.o ciphersaber.hi
