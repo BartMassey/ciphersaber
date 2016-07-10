@@ -64,12 +64,13 @@ fn main() {
         assert!(de);
         Dirn::Decrypt
     };
-    let keystr = match matches.opt_str("k") {
-        Some(s) => s,
+    let mut keybytes: Vec<u8> = vec![];
+    match matches.opt_str("k") {
+        Some(s) => keybytes.extend_from_slice(s.as_bytes()),
         _ => {
             let ok = read_password();
             match ok {
-                Ok(s) => s,
+                Ok(s) => keybytes.extend_from_slice(s.as_bytes()),
                 _ => panic!("password read error")
             }
         }
@@ -91,16 +92,16 @@ fn main() {
             }
         }
     };
+    keybytes.extend_from_slice(&ivb);
 
     let mut state: [u8;256] = [Default::default();256];
     for k in 0..256 {
         state[k] = k as u8;
     }
-    let ks = keystr.as_bytes();
-    let kl = ks.len();
+    let kl = keybytes.len();
     let mut j = 0;
     for k in 0..256 {
-        j = (j + state[k] as usize + ks[k % kl] as usize) & 0xff;
+        j = (j + state[k] as usize + keybytes[k % kl] as usize) & 0xff;
         let tmp = state[k];
         state[k] = state[j];
         state[j] = tmp;
