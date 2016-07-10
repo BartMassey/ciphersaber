@@ -11,11 +11,10 @@ extern crate rpassword;
 
 use getopts::Options;
 use rpassword::read_password;
-use std::env;
-
 use std::default::Default;
+use std::env;
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::{stdin, stdout, Read, Write};
 use std::path::Path;
 use std::error::Error;
 
@@ -76,8 +75,8 @@ fn main() {
         }
     };
     
-    let mut sout = std::io::stdout();
-    let mut sin = std::io::stdin();
+    let mut sin = stdin();
+    let mut sout = stdout();
     let mut ivb :[u8;10] = [Default::default();10];
     match dirn {
         Dirn::Encrypt => {
