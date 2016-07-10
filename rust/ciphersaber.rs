@@ -27,11 +27,7 @@ fn mkiv(ivb: &mut [u8;10]) {
                            why.description()),
         Ok(file) => file
     };
-    let ok = fd.read_exact(ivb);
-    match ok {
-        Ok(()) => (),
-        _ => panic!("couldn't read {}", urandom.display())
-    }
+    fd.read_exact(ivb).expect(&format!("couldn't read {}", urandom.display()));
 }
 
 enum Dirn {
@@ -69,11 +65,8 @@ fn main() {
     match matches.opt_str("k") {
         Some(s) => keybytes.extend_from_slice(s.as_bytes()),
         _ => {
-            let ok = read_password();
-            match ok {
-                Ok(s) => keybytes.extend_from_slice(s.as_bytes()),
-                _ => panic!("password read error")
-            }
+            let s = read_password().expect("password read error");
+            keybytes.extend_from_slice(s.as_bytes());
         }
     };
     let reps = match matches.opt_str("r") {
@@ -90,11 +83,7 @@ fn main() {
             sout.write(&mut ivb).expect("write failed");
         }
         Dirn::Decrypt => {
-            let ok = sin.read_exact(&mut ivb);
-            match ok {
-                Ok(()) => (),
-                _ => panic!("couldn't read iv")
-            }
+            sin.read_exact(&mut ivb).expect("couldn't read iv");
         }
     };
     keybytes.extend_from_slice(&ivb);
@@ -126,9 +115,6 @@ fn main() {
         let plain = ch.unwrap();
         let cipher = state[(si as usize + sj as usize) & 0xff] ^ plain;
         let b = [cipher];
-        match sout.write(&b) {
-            Ok(_) => (),
-            _ => panic!("write error")
-        };
+        sout.write(&b).expect("write error");
     }
 }
