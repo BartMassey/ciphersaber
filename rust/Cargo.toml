@@ -1,0 +1,12 @@
+[package]
+name = "ciphersaber"
+version = "0.1.0"
+authors = ["Bart Massey <bart.massey@gmail.com>"]
+
+[[bin]]
+name = "ciphersaber"
+path = "ciphersaber.rs"
+
+[dependencies]
+rpassword = "*"
+getopts = "*"
