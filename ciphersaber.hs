@@ -4,6 +4,7 @@
 -- Please see the file COPYING in the source
 -- distribution of this software for license terms.
 
+import Control.Exception
 import Control.Monad
 import Data.Array.IO
 import qualified Data.Bits as B
@@ -34,9 +35,9 @@ argd = [
   },
   Arg {
      argIndex = ArgKey,
-     argName = Nothing,
-     argAbbr = Nothing,
-     argData = argDataRequired "key" ArgtypeString,
+     argName = Just "key",
+     argAbbr = Just 'k',
+     argData = argDataOptional "keytext" ArgtypeString,
      argDesc = "Encryption or decryption key."
   } ]
 
@@ -112,6 +113,23 @@ applyStreamCipher :: CState -> IO ()
 applyStreamCipher state =
   getContents >>= applyKeystream state
 
+-- http://stackoverflow.com/a/4064482
+getKey :: String -> IO String
+getKey prompt = do
+  bracket
+    (openFile "/dev/tty" ReadWriteMode)
+    (\h -> hClose h)
+    (\h -> do
+       hPutStr h prompt
+       hFlush h
+       old <- hGetEcho h
+       key <- bracket_
+                (hSetEcho h False)
+                (hSetEcho h old)
+                (hGetLine h)
+       hPutStrLn h ""
+       return key)
+
 main :: IO ()
 main = do
   hSetBinaryMode stdin True
@@ -119,7 +137,9 @@ main = do
   hSetBuffering stdin $ BlockBuffering $ Just $ 64 * 1024
   hSetBuffering stdout $ BlockBuffering $ Just $ 64 * 1024
   argv <- parseArgsIO ArgsComplete argd
-  let k = getRequiredArg argv ArgKey
+  k <- case gotArg argv ArgKey of
+         True -> return $ getRequiredArg argv ArgKey
+         False -> getKey "key:"
   let e = gotArg argv ArgEncrypt
   let d = gotArg argv ArgDecrypt
   unless ((e && not d) || (d && not e)) $
