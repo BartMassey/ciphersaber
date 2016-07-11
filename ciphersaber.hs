@@ -14,7 +14,7 @@ import Data.Word
 import System.Console.ParseArgs
 import System.IO
 
-data ArgInd = ArgEncrypt | ArgDecrypt | ArgKey
+data ArgInd = ArgEncrypt | ArgDecrypt | ArgKey | ArgReps
      deriving (Ord, Eq, Show)
 
 argd :: [ Arg ArgInd ]
@@ -38,7 +38,14 @@ argd = [
      argName = Just "key",
      argAbbr = Just 'k',
      argData = argDataOptional "keytext" ArgtypeString,
-     argDesc = "Encryption or decryption key."
+     argDesc = "Encryption or decryption key (dangerous)."
+  },
+  Arg {
+     argIndex = ArgReps,
+     argName = Just "reps",
+     argAbbr = Just 'r',
+     argData = argDataDefaulted "repcount" ArgtypeInt 20,
+     argDesc = "Number of key sched reps (20 default, 1 for CS1)."
   } ]
 
 type CState = IOUArray Word8 Word8
@@ -46,21 +53,21 @@ type CState = IOUArray Word8 Word8
 fi :: (Integral a, Num b) => a -> b
 fi = fromIntegral
 
-initKeystream :: String -> [Word8] -> IO CState
-initKeystream key iv = do
-  let kl = cycle $ map (fi . ord) key ++ iv
+initKeystream :: String -> [Word8] -> Int -> IO CState
+initKeystream key iv reps = do
+  let keystream = cycle $ map (fi . ord) key ++ iv
   state <- newListArray (0, 255) [0..255]
-  mixArray kl state (0, 0)
+  mixArray (take (256 * reps) keystream) state (0, 0)
   where
-    mixArray :: [Word8] -> CState -> (Int, Word8) -> IO CState
-    mixArray k a (i, j) | i < 256 = do
-      si <- readArray a (fi i)
-      let j' = j + fi si + fi (k !! i)
+    mixArray :: [Word8] -> CState -> (Word8, Word8) -> IO CState
+    mixArray (k : ks) a (i, j) = do
+      si <- readArray a i
+      let j' = j + si + k
       sj' <- readArray a j'
-      writeArray a (fi i) sj'
+      writeArray a i sj'
       writeArray a j' si
-      mixArray k a (i + 1, j')
-    mixArray _ a _ = return a
+      mixArray ks a (i + 1, j')
+    mixArray [] a _ = return a
 
 readIV :: IO [Word8]
 readIV = do
@@ -137,13 +144,16 @@ main = do
   hSetBuffering stdin $ BlockBuffering $ Just $ 64 * 1024
   hSetBuffering stdout $ BlockBuffering $ Just $ 64 * 1024
   argv <- parseArgsIO ArgsComplete argd
-  k <- case gotArg argv ArgKey of
-         True -> return $ getRequiredArg argv ArgKey
-         False -> getKey "key:"
   let e = gotArg argv ArgEncrypt
   let d = gotArg argv ArgDecrypt
   unless ((e && not d) || (d && not e)) $
-    usageError argv "Exactly one of -e or -d is required."
+       usageError argv "Exactly one of -e or -d is required."
+  k <- case gotArg argv ArgKey of
+         True -> return $ getRequiredArg argv ArgKey
+         False -> getKey "key:"
+  let r = getRequiredArg argv ArgReps
+  unless (r > 0) $
+       usageError argv "Reps must be positive."
   iv <- if e then makeIV else readIV
-  s <- initKeystream k iv
+  s <- initKeystream k iv r
   applyStreamCipher s
