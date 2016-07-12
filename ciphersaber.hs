@@ -55,9 +55,10 @@ fi = fromIntegral
 
 initKeystream :: String -> [Word8] -> Int -> IO CState
 initKeystream key iv reps = do
-  let keystream = cycle $ map (fi . ord) key ++ iv
+  let keystream = concat $ replicate reps $
+                  take 256 $ cycle $ map (fi . ord) key ++ iv
   state <- newListArray (0, 255) [0..255]
-  mixArray (take (256 * reps) keystream) state (0, 0)
+  mixArray keystream state (0, 0)
   where
     mixArray :: [Word8] -> CState -> (Word8, Word8) -> IO CState
     mixArray (k : ks) a (i, j) = do
