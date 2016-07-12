@@ -10,7 +10,7 @@ extern crate getopts;
 extern crate rpassword;
 
 use getopts::Options;
-use rpassword::read_password;
+use rpassword::read_password_prompt;
 use std::default::Default;
 use std::env;
 use std::fs::File;
@@ -65,7 +65,7 @@ fn main() {
     match matches.opt_str("k") {
         Some(s) => keybytes.extend_from_slice(s.as_bytes()),
         _ => {
-            let s = read_password().expect("password read error");
+            let s = read_password_prompt("key:").expect("password read error");
             keybytes.extend_from_slice(s.as_bytes());
         }
     };

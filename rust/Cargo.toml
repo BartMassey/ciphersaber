@@ -8,5 +8,5 @@ name = "ciphersaber"
 path = "ciphersaber.rs"
 
 [dependencies]
-rpassword = "*"
+rpassword = { path = "/local/src/rustastic-password" }
 getopts = "*"
