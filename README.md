@@ -1,5 +1,5 @@
 # "Ciphersaber" RC4 implementation
-Copyright © 2012 Bart Massey
+Copyright (c) 1997 Bart Massey
 
 [This program is licensed under the "MIT License". Please
 see the file `COPYING` in this distribution for license
@@ -11,19 +11,29 @@ for the late-90s webpage describing Ciphersaber, or see [the
 currently-available version](http://ciphersaber.gurus.org).
 Maybe it's a little silly, but it's a lot of fun.
 
-There are two implementations here. A C "reference"
-implementation I wrote about 15 years ago is supplied for
-correctness purposes and as a performance baseline.  (I made
-some cosmetic changes to this code to get it to cleanly
-compile in 2012.) The code is kind of inelegant, but it
-works.
+There are three implementations here:
 
-The more interesting implementation is in Haskell, using
-Data.ByteString for the IO and an IOUArray for the RC4
-state. It's kind of crufty, and currently 14x slower than
-the C version, but it works correctly even on large files.
+* A C "reference" implementation I wrote about 1997
+  is supplied for correctness purposes and as a performance
+  baseline.  (I made some cosmetic changes to this code to
+  get it to cleanly compile in 2012.) The code is kind of
+  inelegant, but it works.
+
+* I wrote a more interesting implementation in 2012 in
+  Haskell, using Data.ByteString for the IO and an IOUArray
+  for the RC4 state. It's kind of crufty, and was 14x slower
+  than the C version in 2012, but it works correctly even on
+  large files. (I fixed a bug in 2016.)
+
+* I did a third implementation in 2016 in Ruby. Still
+  working on this.
+
+In 2016 I did a bunch of work/rework, adding "Ciphersaber 2"
+support (basically 20 repetitions of the key initialization
+to work around some known security issues) and support for
+reading the key from `/dev/tty` to all the implementations.
 
 Enjoy.
 
     Bart Massey
-    2012-09-21
+    2016-07-11
