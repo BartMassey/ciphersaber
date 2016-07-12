@@ -61,14 +61,15 @@ initKeystream key iv reps = do
   mixArray keystream state (0, 0)
   where
     mixArray :: [Word8] -> CState -> (Word8, Word8) -> IO CState
-    mixArray (k : ks) a (i, j) = do
+    mixArray (k : ks) a (i, j0) = do
       si <- readArray a i
-      let j' = j + si + k
-      sj' <- readArray a j'
-      writeArray a i sj'
-      writeArray a j' si
-      mixArray ks a (i + 1, j')
-    mixArray [] a _ = return a
+      let j = j0 + si + k
+      sj <- readArray a j
+      writeArray a i sj
+      writeArray a j si
+      mixArray ks a (i + 1, j)
+    mixArray [] a (0, _) = return a
+    mixArray _ _ _ = error "internal error: bad mix state"
 
 readIV :: IO [Word8]
 readIV = do
@@ -102,16 +103,16 @@ accumMapM_ a acc (b : bs) = do
 type Accum = ((Word8, Word8), CState)
 
 stepRC4 :: Accum -> Char -> IO Accum
-stepRC4 ((!i, !j), !state) !b = do
-  let !i' = i + 1
-  !si' <- readArray state i'
-  let !j' = j + si'
-  writeArray state j' si'
-  !sj' <- readArray state j'
-  writeArray state i' sj'
-  !k <- readArray state (si' + sj')
-  putChar $ chr $ fi k `B.xor` (fi (ord b))
-  return ((i', j'), state)
+stepRC4 ((!i0, !j0), !state) !b = do
+  let !i = i0 + 1
+  !si <- readArray state i
+  let !j = j0 + si
+  !sj <- readArray state j
+  writeArray state j si
+  writeArray state i sj
+  !k <- readArray state (si + sj)
+  putChar $ chr $ fi $ B.xor k $ fi $ ord b
+  return ((i, j), state)
 
 applyKeystream :: CState -> String -> IO ()
 applyKeystream state intext = 
