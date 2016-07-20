@@ -11,7 +11,6 @@ extern crate rpassword;
 
 use getopts::Options;
 use rpassword::read_password;
-use std::default::Default;
 use std::env;
 use std::fs::File;
 use std::io::{stdin, stdout, Read, Write};
@@ -76,7 +75,7 @@ fn main() {
     
     let mut sin = stdin();
     let mut sout = stdout();
-    let mut ivb: [u8;10] = [Default::default();10];
+    let mut ivb = [0u8;10];
     match dirn {
         Dirn::Encrypt => {
             mkiv(&mut ivb);
@@ -88,7 +87,7 @@ fn main() {
     };
     keybytes.extend_from_slice(&ivb);
 
-    let mut state: [u8;256] = [Default::default();256];
+    let mut state = [0u8;256];
     for k in 0..256 {
         state[k] = k as u8;
     }
