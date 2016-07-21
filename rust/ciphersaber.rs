@@ -87,7 +87,7 @@ fn main() {
     };
     keybytes.extend_from_slice(&ivb);
 
-    let mut state: [u8;256] = [0u8; 256];
+    let mut state = [0u8; 256];
     for k in 0..state.len() {
         state[k] = k as u8;
     }
