@@ -75,7 +75,7 @@ fn main() {
     
     let mut sin = stdin();
     let mut sout = stdout();
-    let mut ivb: [u8;10] = [0u8;10];
+    let mut ivb = [0u8;10];
     match dirn {
         Dirn::Encrypt => {
             mkiv(&mut ivb);
