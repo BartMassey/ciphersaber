@@ -7,8 +7,8 @@ terms.]
 
 These are implementations of the "Ciphersaber" RC4 stream
 cipher. See the file `ciphersaber.html` in this distribution
-for the late-90s webpage describing Ciphersaber, or see [the
-currently-available version](http://ciphersaber.gurus.org).
+for the late-90s webpage describing Ciphersaber, or see
+[the currently-available version](http://ciphersaber.gurus.org).
 Maybe it's a little silly, but it's a lot of fun.
 
 There are three implementations here:
@@ -23,17 +23,19 @@ There are three implementations here:
   Haskell, using Data.ByteString for the IO and an IOUArray
   for the RC4 state. It's kind of crufty, and was 14x slower
   than the C version in 2012, but it works correctly even on
-  large files. (I fixed a bug in 2016.)
+  large files. (I fixed a bug in 2016, but it should not
+  affect performance.)
 
-* I did a third implementation in 2016 in Ruby. Still
-  working on this.
+* I did a third implementation in 2016 in Rust. It works,
+  but various pieces still need to be pushed upstream before
+  it is stable.
 
-In 2016 I did a bunch of work/rework, adding "Ciphersaber 2"
-support (basically 20 repetitions of the key initialization
-to work around some known security issues) and support for
-reading the key from `/dev/tty` to all the implementations.
+* In 2016 I did a bunch of work/rework, adding "Ciphersaber 2"
+  support (basically 20 repetitions of the key initialization
+  to work around some known security issues) and support for
+  reading the key from `/dev/tty` to all the implementations.
 
 Enjoy.
 
     Bart Massey
-    2016-07-11
+    2016-08-02
