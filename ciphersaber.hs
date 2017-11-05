@@ -24,14 +24,14 @@ argd = [
      argName = Just "encrypt",
      argAbbr = Just 'e',
      argData = Nothing,
-     argDesc = "Use decryption mode."
+     argDesc = "Use encryption mode."
   },
   Arg {
      argIndex = ArgDecrypt,
      argName = Just "decrypt",
      argAbbr = Just 'd',
      argData = Nothing,
-     argDesc = "Use encryption mode."
+     argDesc = "Use decryption mode."
   },
   Arg {
      argIndex = ArgKey,
