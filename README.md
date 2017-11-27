@@ -28,7 +28,8 @@ There are three implementations here:
 
 * I did a third implementation in 2016 in Rust. It works,
   but various pieces still need to be pushed upstream before
-  it is stable.
+  it is stable. I did some more work on it in late 2017.  It
+  currently is (temporarily) UNIX-only.
 
 * In 2016 I did a bunch of work/rework, adding "Ciphersaber 2"
   support (basically 20 repetitions of the key initialization
@@ -38,4 +39,4 @@ There are three implementations here:
 Enjoy.
 
     Bart Massey
-    2016-08-02
+    2017-11-27

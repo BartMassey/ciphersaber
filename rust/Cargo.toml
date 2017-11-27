@@ -7,6 +7,9 @@ authors = ["Bart Massey <bart.massey@gmail.com>"]
 name = "ciphersaber"
 path = "ciphersaber.rs"
 
+[dependencies.rpassword]
+git = "https://github.com/BartMassey/rpassword"
+branch = "tty"
+
 [dependencies]
-rpassword = { path = "/local/src/rustastic-password" }
 getopts = "*"
